@@ -88,15 +88,39 @@ header {
   margin: 0 auto;
   .app {
     @apply --app-fill;
-    display: grid;
-    grid-template-columns: .75fr 1.25fr;
-    grid-template-rows: var(--app-height);
-    grid-gap: 6px;
     border-radius: 8px;
     margin: 0 auto;
     padding: 5px;
     .pomodoro {
+      display: grid;
+      grid-template-columns: 2em 4em);
+      grid-template-rows: 3em;
+      grid-template-areas:
+        'title title'
+        'timer timer'
+        'time relax';
+      justify-items: center;
+      align-items: center;
       color: whitesmoke;
+      .countdown {
+        display: flex;
+        input {
+          font-size: 1.5em;
+        }
+      }
+      .label {
+        grid-area: title;
+      }
+      .countdown {
+        grid-area: timer;
+        padding: 10px 0;
+      }
+      .time-entry {
+        grid-area: time;
+      }
+      .break-entry {
+        grid-area: relax;
+      }
     }
   }
 }
