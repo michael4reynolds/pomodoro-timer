@@ -2,10 +2,9 @@
   "name": "timer-app",
   "version": "0.1.0",
   "private": true,
-  "homepage": "https://michael4reynolds.github.io/timer-app",
   "dependencies": {
     "classnames": "^2.2.5",
-    "moment": "^2.17.1"
+    "moment": "^2.18.1"
   },
   "devDependencies": {
     "babel-core": "6.22.1",
