@@ -14,9 +14,9 @@ const inWorkMin = document.getElementById('work-min')
 const inWorkSec = document.getElementById('work-sec')
 const inBreakMin = document.getElementById('break-min')
 const inBreakSec = document.getElementById('break-sec')
-const countDown = document.querySelector('.countdown')
 const elTime = document.querySelector('.time')
 const btnPlay = document.querySelector('.fa-play')
+const btnFwd = document.querySelector('.fa-forward')
 const btnPause = document.querySelector('.fa-pause')
 const btnStop = document.querySelector('.fa-stop')
 const lblTimer = document.querySelector('.label')
@@ -24,7 +24,6 @@ const lblTimer = document.querySelector('.label')
 const countdownView = (t) => moment.duration(t).format('mm:ss', {trim: false})
 
 // Controller
-// todo: add 'skip' function for session and breaks
 const getCountdownTime = () => {
   let minutes, seconds
   if (onBreak) {
@@ -40,31 +39,56 @@ const getCountdownTime = () => {
 const setTimerDuration = d => timer.options.repeat = d
 
 const startTimer = () => {
-  setTimerDuration(moment.duration(getCountdownTime()).asSeconds())
-  elTime.innerText = countdownView(getCountdownTime())
-  setTimeout(() => {
+  if (timer.state === Overtimer.STATES.RUNNING) return
+  if (timer.state === Overtimer.STATES.PAUSED) {
+    timer.resume()
+  } else {
+    setTimerDuration(moment.duration(getCountdownTime()).asSeconds())
+    elTime.innerText = countdownView(getCountdownTime())
+    elTime.className = classNames('time', {'in-session': !onBreak, 'on-break': onBreak})
     timer.start()
-  }, ONE_SECOND)
+  }
+}
+
+const moveForward = () => {
+  timer.stop()
+  onBreak = !onBreak
+  startTimer()
+}
+
+const pauseTimer = () => {
+  if (timer.state === Overtimer.STATES.RUNNING) {
+    timer.pause()
+    timer.trigger('pause')
+  } else {
+    timer.resume()
+    timer.trigger('resume')
+  }
+}
+
+const stopTimer = () => {
+  timer.stop()
 }
 
 // Events
 timer.on('poll', () => {
-  elTime.innerText = countdownView(timer.totalRemainingTime)
+  elTime.innerText = countdownView(timer.totalRemainingTime + ONE_SECOND)
 })
 
 timer.on('finish', () => {
-  log('done')
   onBreak = !onBreak
+  elTime.innerText = countdownView(timer.totalRemainingTime)
+  elTime.className = classNames('time', {'in-session': !onBreak, 'on-break': onBreak})
   lblTimer.innerText = onBreak ? 'Break' : 'Session'
-  elTime.className = classNames('time', {'on-break': onBreak})
 })
 
 // initialize
 function init() {
   try {
     btnPlay.onclick = startTimer
-    // btnPause.onclick = pauseTimer
-    // btnStop.onclick = stopTimer
+    btnFwd.onclick = moveForward
+    btnPause.onclick = pauseTimer
+    btnStop.onclick = stopTimer
     elTime.innerText = countdownView(getCountdownTime())
   } catch (e) {
     log(e)
