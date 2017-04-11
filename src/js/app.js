@@ -19,6 +19,7 @@ const elTime = document.querySelector('.time')
 const btnPlay = document.querySelector('.fa-play')
 const btnPause = document.querySelector('.fa-pause')
 const btnStop = document.querySelector('.fa-stop')
+const lblTimer = document.querySelector('.label')
 
 const countdownView = (t) => moment.duration(t).format('mm:ss', {trim: false})
 
@@ -54,7 +55,8 @@ timer.on('poll', () => {
 timer.on('finish', () => {
   log('done')
   onBreak = !onBreak
-  countDown.className = classNames('countdown', {'on-break': onBreak})
+  lblTimer.innerText = onBreak ? 'Break' : 'Session'
+  elTime.className = classNames('time', {'on-break': onBreak})
 })
 
 // initialize
