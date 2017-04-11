@@ -5,7 +5,9 @@
   "dependencies": {
     "classnames": "^2.2.5",
     "font-awesome": "^4.7.0",
-    "moment": "^2.18.1"
+    "moment": "^2.18.1",
+    "moment-duration-format": "^1.3.0",
+    "overtimer": "^0.1.6"
   },
   "devDependencies": {
     "babel-core": "6.22.1",
