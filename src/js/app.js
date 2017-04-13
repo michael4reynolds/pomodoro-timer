@@ -38,14 +38,18 @@ const getCountdownTime = () => {
 
 const setTimerDuration = d => timer.options.repeat = d
 
+const setupTimer = () =>{
+  setTimerDuration(moment.duration(getCountdownTime()).asSeconds())
+  elTime.innerText = countdownView(getCountdownTime())
+  elTime.className = classNames('time', {'in-session': !onBreak, 'on-break': onBreak})
+}
+
 const startTimer = () => {
   if (timer.state === Overtimer.STATES.RUNNING) return
   if (timer.state === Overtimer.STATES.PAUSED) {
     timer.resume()
   } else {
-    setTimerDuration(moment.duration(getCountdownTime()).asSeconds())
-    elTime.innerText = countdownView(getCountdownTime())
-    elTime.className = classNames('time', {'in-session': !onBreak, 'on-break': onBreak})
+    setupTimer()
     timer.start()
   }
 }
@@ -53,7 +57,8 @@ const startTimer = () => {
 const moveForward = () => {
   timer.stop()
   onBreak = !onBreak
-  startTimer()
+  lblTimer.innerText = onBreak ? 'Break' : 'Session'
+  setupTimer()
 }
 
 const pauseTimer = () => {
